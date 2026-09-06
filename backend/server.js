@@ -1,8 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
-const pool = require('./db');
+import express from 'express';
+import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import pool from './db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
@@ -14,15 +18,19 @@ async function initDatabase() {
     const schemaPath = path.join(__dirname, 'schema.sql');
     const seedPath = path.join(__dirname, 'seed.sql');
 
-    if (fs.existsSync(schemaPath) && fs.existsSync(seedPath)) {
+    if (fs.existsSync(schemaPath)) {
       const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-      const seedSql = fs.readFileSync(seedPath, 'utf8');
-
-      console.log('Initializing database schema & seed...');
+      console.log('Initializing database schema...');
       await pool.query(schemaSql);
-      await pool.query(seedSql);
-      console.log('Database initialized successfully!');
     }
+
+    if (fs.existsSync(seedPath)) {
+      const seedSql = fs.readFileSync(seedPath, 'utf8');
+      console.log('Initializing database seed...');
+      await pool.query(seedSql);
+    }
+
+    console.log('Database initialized successfully!');
   } catch (err) {
     console.error('Error initializing database:', err.message);
   }
