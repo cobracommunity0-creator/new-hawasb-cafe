@@ -1,11 +1,9 @@
--- 1. إدراج المستخدمين الافتراضيين (الأدمن والكاشير)
 INSERT INTO users (name, pin, role) 
 VALUES 
   ('مدير النظام', '1234', 'admin'),
   ('كاشير 1', '5555', 'cashier')
 ON CONFLICT (pin) DO NOTHING;
 
--- 2. إدراج خامات ومكونات تجريبية
 INSERT INTO raw_ingredients (name, stock_quantity, base_unit)
 VALUES 
   ('بن برازيلي', 5000, 'g'),
@@ -13,7 +11,6 @@ VALUES
   ('سكر', 10000, 'g')
 ON CONFLICT DO NOTHING;
 
--- 3. إدراج منتجات تجريبية (باستخدام الأعمدة المتوافقة مع schema.sql)
 INSERT INTO products (name, price, is_active)
 VALUES 
   ('إسبراسو', 35.00, true),
