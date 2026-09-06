@@ -5,7 +5,7 @@ VALUES
   ('كاشير 1', '5555', 'cashier')
 ON CONFLICT (pin) DO NOTHING;
 
--- 2. إدراج خامات ومكونات تجريبية للمشروبات
+-- 2. إدراج خامات ومكونات تجريبية
 INSERT INTO raw_ingredients (name, stock_quantity, base_unit)
 VALUES 
   ('بن برازيلي', 5000, 'g'),
@@ -13,10 +13,10 @@ VALUES
   ('سكر', 10000, 'g')
 ON CONFLICT DO NOTHING;
 
--- 3. إدراج منتجات تجريبية
-INSERT INTO products (name, category, base_price, is_active)
+-- 3. إدراج منتجات تجريبية (باستخدام الأعمدة المتوافقة مع schema.sql)
+INSERT INTO products (name, price, is_active)
 VALUES 
-  ('إسبراسو', 'مشروبات ساخنة', 35.00, true),
-  ('لاتيه', 'مشروبات ساخنة', 50.00, true),
-  ('كابتشينو', 'مشروبات ساخنة', 45.00, true)
+  ('إسبراسو', 35.00, true),
+  ('لاتيه', 50.00, true),
+  ('كابتشينو', 45.00, true)
 ON CONFLICT DO NOTHING;
