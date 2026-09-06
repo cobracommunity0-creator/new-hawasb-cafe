@@ -1,32 +1,14 @@
-import pool from './db.js'; // أو طريقة التصدير المستعملة لديك
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import pg from 'pg';
+import dotenv from 'dotenv';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
-export async function initDB() {
-  try {
-    const schemaPath = path.join(__dirname, 'schema.sql');
-    const seedPath = path.join(__dirname, 'seed.sql');
+const { Pool } = pg;
 
-    // 1. إنشاء الجداول
-    if (fs.existsSync(schemaPath)) {
-      const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-      await pool.query(schemaSql);
-      console.log('✅ Schema created successfully!');
-    }
-
-    // 2. زراعة البيانات الأساسية
-    if (fs.existsSync(seedPath)) {
-      const seedSql = fs.readFileSync(seedPath, 'utf8');
-      await pool.query(seedSql);
-      console.log('✅ Seed data inserted successfully!');
-    }
-  } catch (err) {
-    console.error('❌ Error initializing database:', err.message);
-  }
-}
+// 1. إنشاء الاتصال بقاعدة البيانات
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+});
 
 export default pool;
